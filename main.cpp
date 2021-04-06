@@ -15,7 +15,7 @@ void insertafter(list *head, int value, int after);
 void insertbefore(list **head, int value, int before);
 void pop(list **head);
 void poplast(list **head);
-void popmiddle(list **head, int position);
+void deletenode(list **head, int value);
 void printlink(list *nodeptr);
 void individual(list *head1, list *head2);
 
@@ -37,7 +37,7 @@ int main()
         printf("To add node in the end of L1 press 4\n");
         printf("To print L1 press 5\n");
         printf("To delete (pop) first node in L1 press 6\n");
-        printf("To delete n-th node in L1 press 7\n");
+        printf("To delete specific value in L1 press 7\n");
         printf("To delete the last node in L1 press 8\n");
 		printf("\n");
 		printf("To add node in the begining(push) of L2 press 10\n");
@@ -46,7 +46,7 @@ int main()
         printf("To add node in the end of L2 press 40\n");
         printf("To print L2 press 50\n");
         printf("To delete (pop) first node in L2 press 60\n");
-        printf("To delete n-th node in L2 press 70\n");
+        printf("To delete specific value in L2 press 70\n");
         printf("To delete the last node in L2 press 80\n");
 		printf("\n");
 		printf("Individaul task(Linked list L with elements from L1 which are not in L2 press 100\n");
@@ -101,10 +101,10 @@ int main()
             printf("\n\n"); break;
         case 7:
             int g;
-            printf("\nWhat is the position number of the node you want to delete:");
+            printf("\nWhat is the value of the node you want to delete:");
             scanf("%d",&g);
-            popmiddle(&head,g);
-            printf("L1 after deleting %d-th node is:\n",g);
+            deletenode(&head,g);
+            printf("L1 after deleting value: %d is:\n",g);
 		    printlink(head);
             printf("\n\n"); break;
 
@@ -160,10 +160,10 @@ int main()
             printf("\n\n"); break;
         case 70:
             int g1;
-            printf("\nWhat is the position number of the node you want to delete:");
+            printf("\nWhat is the value you want to delete:");
             scanf("%d",&g1);
-            popmiddle(&head,g1);
-            printf("L2 after deleting %d-th node is:\n",g1);
+            deletenode(&head,g1);
+            printf("L2 after deleting value %d is:\n",g1);
 		    printlink(head1);
             printf("\n\n");break;
 
@@ -252,7 +252,8 @@ void insertbefore(list **head, int value, int before){
 
     newnode->id=value;
 
-    if((*head)->id==value){
+
+    if((*head)->id==before){
         newnode->next=*head;
         *head=newnode;
         return;
@@ -296,27 +297,21 @@ void poplast(list **head){
     prev->next=NULL;
     free(current);
 }
-void popmiddle(list **head, int position){
-    list *current=*head;
-    list *previous=*head;
+void deletenode(list **head, int value){
+    list *tmp=*head,*prev;
 
-    if(*head==NULL)
-        printf("List is already empty");
-    else if(position==1){
-        *head=current->next;
-        free(current);
-        current=NULL;
+
+    if(tmp!=NULL && tmp->id==value){
+        *head=tmp->next;
+        free(tmp);
+        return;}
+
+    while(tmp!=NULL && tmp->id!=value){
+        prev=tmp;
+        tmp=tmp->next;
     }
-    else{
-        while(position!=1){
-            previous=current;
-            current=current->next;
-            position--;
-            }
-        previous->next=current->next;
-        free(current);
-        current=NULL;
-    }
+    prev->next=tmp->next;
+    free(tmp);
 
 }
 void printlink(list *nodeptr){
